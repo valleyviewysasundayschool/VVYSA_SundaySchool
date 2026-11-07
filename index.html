@@ -2021,22 +2021,10 @@
         return;
       }
 
-      // The destination is populated only by a successful live boot response.
-      // If we only have cached/offline schedule data, refresh before showing a QR code.
-      const base = sanitizeAttendanceBase(state.attendanceBaseUrl);
-      if (!base) {
-        showToast('Refreshing the attendance link...');
-        refreshBoot(true).then(function() {
-          if (sanitizeAttendanceBase(state.attendanceBaseUrl)) {
-            openAttendanceModal(className);
-          } else {
-            showToast('Could not verify the GitHub attendance link. Please try again.');
-          }
-        });
-        return;
-      }
-
-      const targetUrl = `${base}?class=${encodeURIComponent(className)}`;
+      // Fixed public GitHub Pages destination. It does not depend on an Apps Script
+      // boot response, cache, or network verification. The Apps Script URL remains
+      // separate and is still used by api() for Sunday School data.
+      const targetUrl = `${ATTENDANCE_GITHUB_PAGES_URL}?class=${encodeURIComponent(className)}`;
 
       document.getElementById('attendance-modal-title').textContent = `${className} Attendance`;
       document.getElementById('attendance-url-input').value = targetUrl;
