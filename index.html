@@ -678,7 +678,7 @@
   <script>
     // Backend (Google Apps Script). Every request needs a signed-in session, so this address is safe to publish.
     const APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzBaM05VE2DM7TF2mZVSMM29DfTGQJkWGK84z_baeGSUisNamgZP2E2SZGKVoo3t_XS0w/exec';
-    const LOCAL_BOOT_CACHE_KEY = 'vv_ss_boot_cache_v6';
+    const LOCAL_BOOT_CACHE_KEY = 'vv_ss_boot_cache_v5';
 
     const KNOWN_LESSON_PREVIEW_IMAGES = {"/study/manual/come-follow-me-for-home-and-church-old-testament-2026/14": "https://www.churchofjesuschrist.org/imgs/1c2413340f1911ef92c5eeeeac1eb3d4e4ffbb9d/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/41": "https://www.churchofjesuschrist.org/imgs/d17747ea13ad11efb4bbeeeeac1ea2a0b67749b9/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/42": "https://www.churchofjesuschrist.org/imgs/f7d8b44313b411efaa94eeeeac1e64314ec0298d/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/43": "https://www.churchofjesuschrist.org/imgs/687a7dba13ae11efbf2feeeeac1e59432305a0b9/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/44": "https://www.churchofjesuschrist.org/imgs/41295c2416c611ef867beeeeac1ed83083908adf/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/45": "https://www.churchofjesuschrist.org/imgs/06873993130e11efa101eeeeac1e8344e4f8072c/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/46": "https://www.churchofjesuschrist.org/imgs/09a7b376130e11efa101eeeeac1e8344d5564be6/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/47": "https://www.churchofjesuschrist.org/imgs/04c11f93130e11ef8512eeeeac1ef92bdebe188c/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/48": "https://www.churchofjesuschrist.org/imgs/8fd9786212fb11efb34deeeeac1e1bdcbdf3f714/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/49": "https://www.churchofjesuschrist.org/imgs/122c24163de211eeb167eeeeac1e3d73bdc661c5/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/50": "https://www.churchofjesuschrist.org/imgs/04f85c32130e11ef9843eeeeac1ef6279de3dd7a/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/51": "https://www.churchofjesuschrist.org/imgs/a73e29f0174c6084fdfac76c89a6f538b7ae84f6/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-old-testament-2026/52": "https://www.churchofjesuschrist.org/imgs/bcb38e7212fb11efa003eeeeac1e5954cb4a32f2/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/01": "https://www.churchofjesuschrist.org/imgs/9l6bp4fq6rpinignvzypvk14ighnp4zq5i4ukid8/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/02": "https://www.churchofjesuschrist.org/imgs/ysaa6kruu6q6uh4inoa154y716r44j3d7uz63gap/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/03": "https://www.churchofjesuschrist.org/imgs/35a13198247703463bbb13c73e179aff6f2da9d2/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/04": "https://www.churchofjesuschrist.org/imgs/d22c692e4be94ca356c65d2dde291a6cffae07d9/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/05": "https://www.churchofjesuschrist.org/imgs/de6e55828c8fe331fab06bbd22ea9237c1fb4f8b/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/06": "https://www.churchofjesuschrist.org/imgs/d55a1cc7a2b071ccacbab4ca4692b48b11eb73fa/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/07": "https://www.churchofjesuschrist.org/imgs/4746527d5d73a1af740f250d0c1d2f405529c7c0/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/08": "https://www.churchofjesuschrist.org/imgs/07e9e52036df11eea64deeeeac1e890de985aabd/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/09": "https://www.churchofjesuschrist.org/imgs/9dr72oj7t1s4ubx91mp7pwkvjq2v1sufgennx8za/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/10": "https://www.churchofjesuschrist.org/imgs/5953f6f7aed711eda61beeeeac1eaa47906f2781/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/11": "https://www.churchofjesuschrist.org/imgs/ltsi1p4vegujabrwpo0k1s8lwr28id5yz38eygy3/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/12": "https://www.churchofjesuschrist.org/imgs/o5l7pztdqt808trssmxftw1nsbaz14xbyjagw821/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/13": "https://www.churchofjesuschrist.org/imgs/e712432bcf39035169f353cd513558b816b50bd8/full/%21800%2C/0/default", "/study/manual/come-follow-me-for-home-and-church-new-testament-2027/14": "https://www.churchofjesuschrist.org/imgs/1c2413340f1911ef92c5eeeeac1eb3d4e4ffbb9d/full/%21800%2C/0/default", "/study/manual/teaching-in-the-saviors-way": "https://www.churchofjesuschrist.org/imgs/510f01577b0a11ec9315eeeeac1e5d4d35398f79/full/%21800%2C/0/default", "/study/manual/teaching-in-the-saviors-way-2022": "https://www.churchofjesuschrist.org/imgs/510f01577b0a11ec9315eeeeac1e5d4d35398f79/full/%21800%2C/0/default"};
 
@@ -818,9 +818,8 @@
             teachers: state.teachers,
             contacts: state.contacts,
             monthlyTrainings: state.monthlyTrainings,
-            teachingAids: state.teachingAids
-            // Deliberately do not cache attendanceBaseUrl.
-            // The QR destination must come from the live Sunday School backend.
+            teachingAids: state.teachingAids,
+            attendanceBaseUrl: state.attendanceBaseUrl
           }
         }));
       } catch (e) {}
@@ -832,27 +831,24 @@
         if (!raw) return null;
         const parsed = JSON.parse(raw);
         if (parsed && parsed.email === auth.email && parsed.boot && Array.isArray(parsed.boot.schedule)) {
-          // Older cache versions may contain the former Apps Script QR destination.
-          // Never allow an offline/stale cache to supply a public attendance URL.
-          delete parsed.boot.attendanceBaseUrl;
           return parsed.boot;
         }
       } catch (e) {}
       return null;
     }
 
-    // Only the published 2nd Hour GitHub Pages app is a valid public QR destination.
+    // The only classes that have a public check-in page. Anything else is refused.
     const ATTENDANCE_CLASSES = ['Sunday School', 'Gospel Foundation', 'Temple Prep'];
-    const ATTENDANCE_GITHUB_PAGES_URL =
-      'https://valleyviewysasundayschool.github.io/VVYSA_2ndHour_Attendance/';
 
-    // Reject Apps Script URLs, other GitHub sites, query strings, and stale destinations.
+    // Keep only the plain check-in address. Any query string (for example an admin key) is dropped.
     function sanitizeAttendanceBase(raw) {
-      const value = String(raw || '').trim();
-      const expected = ATTENDANCE_GITHUB_PAGES_URL;
-      const normalize = function(s) { return s.replace(/\/+$/, '').toLowerCase(); };
-      return normalize(value) === normalize(expected) ? expected : '';
+      const u = String(raw || '').trim().split('?')[0].split('#')[0];
+      const okPages = /^https:\/\/[A-Za-z0-9-]+\.github\.io(\/[A-Za-z0-9._~-]+)*\/?$/i.test(u);
+      const okScript = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(u);
+      if (okPages) return u.replace(/\/+$/, '') + '/';
+      return okScript ? u : '';
     }
+
     function applyBootPayload(boot) {
       if (!boot || !Array.isArray(boot.schedule)) return;
       state.schedule = boot.schedule || [];
@@ -2016,15 +2012,10 @@
     }
 
     function openAttendanceModal(className) {
-      if (ATTENDANCE_CLASSES.indexOf(className) === -1) {
-        showToast('Attendance link unavailable for this class.');
-        return;
-      }
-
-      // Fixed public GitHub Pages destination. It does not depend on an Apps Script
-      // boot response, cache, or network verification. The Apps Script URL remains
-      // separate and is still used by api() for Sunday School data.
-      const targetUrl = `${ATTENDANCE_GITHUB_PAGES_URL}?class=${encodeURIComponent(className)}`;
+      const base = state.attendanceBaseUrl;
+      if (!base || ATTENDANCE_CLASSES.indexOf(className) === -1) { showToast('Attendance link unavailable. Please refresh and try again.'); return; }
+      const sep = base.includes('?') ? '&' : '?';
+      const targetUrl = `${base}${sep}class=${encodeURIComponent(className)}`;
 
       document.getElementById('attendance-modal-title').textContent = `${className} Attendance`;
       document.getElementById('attendance-url-input').value = targetUrl;
