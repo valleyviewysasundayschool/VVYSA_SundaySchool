@@ -842,11 +842,10 @@
 
     // Keep only the plain check-in address. Any query string (for example an admin key) is dropped.
     function sanitizeAttendanceBase(raw) {
-      const u = String(raw || '').trim();
-      if (!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec/.test(u)) return '';
-      return u.split('?')[0].split('#')[0];
+    const u = String(raw || '').trim();
+    if (!/^https:\/\/([a-z0-9-]+\.github\.io\/[^\s?#]+|script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec)/i.test(u)) return '';
+    return u.split('?')[0].split('#')[0].replace(/\/+$/, '');
     }
-
     function applyBootPayload(boot) {
       if (!boot || !Array.isArray(boot.schedule)) return;
       state.schedule = boot.schedule || [];
