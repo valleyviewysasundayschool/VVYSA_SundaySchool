@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha384-3zSEDfvllQohrq0PHL1fOXJuC/jSOO34H46t6UQfobFOmxE5BpjjaIJY5F2/bMnU" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+Pro:ital,wght@0,600;0,700;0,900;1,600;1,700;1,900&family=Source+Serif+4:ital,opsz,wght@0,8..60,600..900;1,8..60,600..900&display=swap" rel="stylesheet">
@@ -701,6 +701,7 @@
       monthlyTrainings: [],
       teachingAids: [],
       attendanceBaseUrl: '',
+      attendanceScanKey: '',
       slideLinks: ['', '', '']
     };
 
@@ -825,7 +826,8 @@
             contacts: state.contacts,
             monthlyTrainings: state.monthlyTrainings,
             teachingAids: state.teachingAids,
-            attendanceBaseUrl: state.attendanceBaseUrl
+            attendanceBaseUrl: state.attendanceBaseUrl,
+            attendanceScanKey: state.attendanceScanKey
           }
         }));
       } catch (e) {}
@@ -855,6 +857,11 @@
       return okScript ? u : '';
     }
 
+    function sanitizeScanKey(raw) {
+      const k = String(raw || '').trim();
+      return /^[A-Za-z0-9_-]{6,64}$/.test(k) ? k : '';
+    }
+
     function applyBootPayload(boot) {
       if (!boot || !Array.isArray(boot.schedule)) return;
       state.schedule = boot.schedule || [];
@@ -863,6 +870,7 @@
       state.monthlyTrainings = boot.monthlyTrainings || [];
       state.teachingAids = boot.teachingAids || [];
       state.attendanceBaseUrl = sanitizeAttendanceBase(boot.attendanceBaseUrl);
+      state.attendanceScanKey = sanitizeScanKey(boot.attendanceScanKey);
       state.upcomingSundayKey = boot.upcomingSundayKey || computeUpcomingSundayKeyClient();
 
       // Identity comes from the verified sign-in. Only the presidency can "view as" another teacher.
@@ -907,7 +915,7 @@
       auth = { token: '', email: '', name: '', role: '' };
       state.schedule = []; state.teachers = []; state.contacts = [];
       state.monthlyTrainings = []; state.teachingAids = [];
-      state.attendanceBaseUrl = ''; state.currentTeacher = '';
+      state.attendanceBaseUrl = ''; state.attendanceScanKey = ''; state.currentTeacher = '';
       ['modal-account', 'modal-login'].forEach(function(id) {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
@@ -1137,6 +1145,11 @@
       closeAllCustomDropdowns();
     }
 
+    function selectCustomDropdownFromEl(key, btnEl) {
+      if (!btnEl || !btnEl.dataset) return;
+      selectCustomDropdownOption(key, btnEl.dataset.value || '', btnEl.dataset.label || '');
+    }
+
     document.addEventListener('click', function(e) {
       if (!e.target.closest('[data-custom-dropdown]')) {
         closeAllCustomDropdowns();
@@ -1162,7 +1175,7 @@
       const menuEl = document.getElementById('login-teacher-dropdown-menu');
       if (menuEl) {
         menuEl.innerHTML = state.teachers.map(t => `
-          <button type="button" onclick="selectCustomDropdownOption('login-teacher', '${escapeHtml(t)}', '${escapeHtml(t)}')"
+          <button type="button" data-value="${escapeHtml(t)}" data-label="${escapeHtml(t)}" onclick="selectCustomDropdownFromEl('login-teacher', this)"
             class="w-full py-2 px-3 text-center text-[13px] font-bold text-[#3d3d3d] hover:bg-black/5 active:bg-black/10 rounded-[8px] transition block">
             ${escapeHtml(t)}
           </button>
@@ -1307,7 +1320,7 @@
         openLoginModal(true);
         return;
       }
-      const url = state.slideLinks[slideIdx];
+      const url = safeHttpUrl(state.slideLinks[slideIdx], '');
       if (url) {
         window.open(url, '_blank', 'noopener,noreferrer');
       }
@@ -1542,7 +1555,7 @@
       }
 
       const renderItems = (list) => list.map((aid) => `
-        <a href="${escapeHtml(aid.url || 'https://www.churchofjesuschrist.org/study')}" target="_blank" rel="noopener noreferrer"
+        <a href="${escapeHtml(safeHttpUrl(aid.url, 'https://www.churchofjesuschrist.org/study'))}" target="_blank" rel="noopener noreferrer"
            class="flex items-center gap-3 group p-1 rounded-lg hover:bg-white/5 transition">
           ${buildAidIconHtml(aid)}
           <div class="min-w-0 flex-1">
@@ -1802,7 +1815,7 @@
             menuEl.innerHTML = `<div class="py-2 px-3 text-center text-[12px] font-bold text-[#757575]">${escapeHtml(defaultLabel)}</div>`;
           } else {
             menuEl.innerHTML = requestable.map(r => `
-              <button type="button" onclick="selectCustomDropdownOption('${key}', '${r.rowNumber}', '${escapeHtml(r.dateLabel)}')"
+              <button type="button" data-value="${escapeHtml(r.rowNumber)}" data-label="${escapeHtml(r.dateLabel)}" onclick="selectCustomDropdownFromEl('${key}', this)"
                 class="w-full py-2 px-3 text-center text-[13px] font-bold text-[#3d3d3d] hover:bg-black/5 active:bg-black/10 rounded-[8px] transition block">
                 ${escapeHtml(r.dateLabel)}
               </button>
@@ -1856,7 +1869,7 @@
               <span>${escapeHtml(item.roomShort)}</span>
             </div>
             <div class="col-span-4 flex justify-center">
-              <a href="${escapeHtml(item.lessonUrl)}" target="_blank" rel="noopener noreferrer"
+              <a href="${escapeHtml(safeHttpUrl(item.lessonUrl, 'https://www.churchofjesuschrist.org/study/come-follow-me'))}" target="_blank" rel="noopener noreferrer"
                  class="bg-[#555888] hover:bg-[#464973] text-white text-[10.5px] font-bold px-3.5 py-1 rounded-full shadow-sm transition">
                 View
               </a>
@@ -2022,7 +2035,8 @@
       const base = state.attendanceBaseUrl;
       if (!base || ATTENDANCE_CLASSES.indexOf(className) === -1) { showToast('Attendance link unavailable. Please refresh and try again.'); return; }
       const sep = base.includes('?') ? '&' : '?';
-      const targetUrl = `${base}${sep}class=${encodeURIComponent(className)}`;
+      const keyParam = state.attendanceScanKey ? `&k=${encodeURIComponent(state.attendanceScanKey)}` : '';
+      const targetUrl = `${base}${sep}class=${encodeURIComponent(className)}${keyParam}`;
 
       document.getElementById('attendance-modal-title').textContent = `${className} Attendance`;
       document.getElementById('attendance-url-input').value = targetUrl;
@@ -2095,6 +2109,12 @@
       return String(str || '').replace(/[&<>"']/g, m => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
       })[m]);
+    }
+
+    function safeHttpUrl(url, fallback) {
+      const s = String(url || '').trim();
+      if (/^https?:\/\/[^\s"'<>\\]+$/i.test(s)) return s;
+      return fallback !== undefined ? fallback : 'https://www.churchofjesuschrist.org/study';
     }
 
     window.onload = initApp;
